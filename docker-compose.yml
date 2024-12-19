@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  features:
+    build:
+      context: .
+    command: python features.py
+    depends_on:
+      - rabbitmq
+
+  metric:
+    build:
+      context: .
+    command: python metric.py
+    depends_on:
+      - rabbitmq
+
+  plot:
+    build:
+      context: .
+    command: python plot.py
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./logs:/app/logs
